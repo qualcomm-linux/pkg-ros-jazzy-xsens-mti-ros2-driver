@@ -1,4 +1,55 @@
 #!/usr/bin/make -f
 
+# Debian packaging for the xsens_mti_ros2_driver ROS 2 package only.
+# The NTRIP client (src/ntrip) is intentionally not built or installed.
+
+export DH_VERBOSE = 1
+
+# ROS 2 distribution this package targets.
+ROS_DISTRO ?= jazzy
+ROS_SETUP  := /opt/ros/$(ROS_DISTRO)/setup.sh
+
+# Where colcon builds and where the package is finally installed.
+PKG       := xsens_mti_ros2_driver
+SRC_DIR   := $(CURDIR)/src/$(PKG)
+COLCON_WS := $(CURDIR)/obj-colcon
+INSTALL_PREFIX := /opt/ros/$(ROS_DISTRO)
+DESTDIR   := $(CURDIR)/debian/ros-jazzy-xsens-mti-ros2-driver
+
+# Run a command with the ROS 2 environment sourced.
+ros_run = . $(ROS_SETUP) && $(1)
+
 %:
 	dh $@
+
+override_dh_auto_configure:
+
+# Build only the driver package with colcon/ament, installing under the
+# isolated colcon workspace so we control what lands in the .deb.
+override_dh_auto_build:
+	$(call ros_run, \
+		colcon build \
+			--base-paths $(CURDIR)/src \
+			--packages-select $(PKG) \
+			--build-base $(COLCON_WS)/build \
+			--install-base $(COLCON_WS)/install \
+			--merge-install \
+			--cmake-args \
+				-DCMAKE_BUILD_TYPE=Release \
+				-DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX))
+
+# Stage the colcon install tree into the package destdir under /opt/ros.
+override_dh_auto_install:
+	mkdir -p $(DESTDIR)$(INSTALL_PREFIX)
+	cp -a $(COLCON_WS)/install/. $(DESTDIR)$(INSTALL_PREFIX)/
+	# colcon's merge-install drops a workspace-local setup; not wanted in a
+	# system package that overlays the existing /opt/ros/$(ROS_DISTRO).
+	rm -f $(DESTDIR)$(INSTALL_PREFIX)/setup.* \
+	      $(DESTDIR)$(INSTALL_PREFIX)/local_setup.* \
+	      $(DESTDIR)$(INSTALL_PREFIX)/_local_setup_util*.py \
+	      $(DESTDIR)$(INSTALL_PREFIX)/COLCON_IGNORE
+
+override_dh_auto_test:
+
+override_dh_auto_clean:
+	rm -rf $(COLCON_WS) $(CURDIR)/log

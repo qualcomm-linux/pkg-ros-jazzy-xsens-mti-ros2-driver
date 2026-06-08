@@ -1,19 +1,43 @@
-Source: template
-Section: libs
+Source: ros-jazzy-xsens-mti-ros2-driver
+Section: misc
 Priority: optional
-Maintainer: Simon Beaudoin <sbeaudoi@qti.qualcomm.com>
-Build-Depends: debhelper (>= 13)
+Maintainer: Github Service Bot <githubservice@qti.qualcomm.com>
+Build-Depends: debhelper-compat (= 13),
+               cmake,
+               libeigen3-dev,
+               ros-jazzy-ament-cmake,
+               ros-jazzy-rclcpp,
+               ros-jazzy-rosidl-default-generators,
+               ros-jazzy-std-msgs,
+               ros-jazzy-geometry-msgs,
+               ros-jazzy-sensor-msgs,
+               ros-jazzy-nav-msgs,
+               ros-jazzy-nmea-msgs,
+               ros-jazzy-mavros-msgs,
+               ros-jazzy-tf2,
+               ros-jazzy-tf2-ros
 Standards-Version: 4.6.2
+Homepage: https://github.com/xsenssupport/Xsens_MTi_ROS_Driver_and_Ntrip_Client
 
-Package: template1
+Package: ros-jazzy-xsens-mti-ros2-driver
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Template package
- This is an example package to demonstrate the Qualcomm OSS development flow
-
-Package: template-dev
-Section: libdevel
-Architecture: any
-Depends: template1 (= ${binary:Version}), ${misc:Depends}
-Description: Template package dev
- This is an example package to demonstrate the Qualcomm OSS development flow
+Depends: ${shlibs:Depends},
+         ${misc:Depends},
+         ros-jazzy-rclcpp,
+         ros-jazzy-std-msgs,
+         ros-jazzy-geometry-msgs,
+         ros-jazzy-sensor-msgs,
+         ros-jazzy-nav-msgs,
+         ros-jazzy-nmea-msgs,
+         ros-jazzy-mavros-msgs,
+         ros-jazzy-tf2,
+         ros-jazzy-tf2-ros,
+         ros-jazzy-rosidl-default-runtime
+Description: ROS 2 driver for Xsens MTi IMU sensors
+ ROS 2 driver node for Movella/Xsens MTi series inertial measurement units
+ (e.g. MTi-680G/MTi-8/MTi-630/MTi-300). It publishes orientation, inertial,
+ magnetic, GNSS and status data, and bundles the Xsens Device API
+ (xspublic) for device communication.
+ .
+ This package builds only the xsens_mti_ros2_driver package for ROS 2 Jazzy;
+ the optional NTRIP client is not included.
