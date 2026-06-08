@@ -1,5 +1,6 @@
-template-package-name (1.0.0-1) UNRELEASED; urgency=medium
+ros-jazzy-xsens-mti-ros2-driver (1.0.2-1) UNRELEASED; urgency=medium
 
-  * Populate.
+  * Initial Debian packaging of the xsens_mti_ros2_driver ROS 2 package
+    for ROS 2 Jazzy. Builds only the driver; the NTRIP client is excluded.
 
- -- Github Service Bot <githubservice@qti.qualcomm.com>  Tue, 07 Oct 2025 14:21:59 -0700
+ -- Github Service Bot <githubservice@qti.qualcomm.com>  Mon, 08 Jun 2026 12:00:00 +0000
