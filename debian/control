@@ -18,6 +18,8 @@ Build-Depends: debhelper-compat (= 13),
                ros-jazzy-tf2-ros
 Standards-Version: 4.6.2
 Homepage: https://github.com/xsenssupport/Xsens_MTi_ROS_Driver_and_Ntrip_Client
+Vcs-Git: https://github.com/qualcomm-linux/pkg-ros-jazzy-xsens-mti-ros2-driver.git
+Vcs-Browser: https://github.com/qualcomm-linux/pkg-ros-jazzy-xsens-mti-ros2-driver
 
 Package: ros-jazzy-xsens-mti-ros2-driver
 Architecture: any
