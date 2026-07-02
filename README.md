@@ -198,3 +198,7 @@ If the program displays the message `No MTi device found`:
 
 
 
+
+## License
+
+This project uses the Movella/Xsens license (a BSD-3-Clause-style license with additional terms). See the [LICENSE](LICENSE) file for the full text.

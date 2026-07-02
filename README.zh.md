@@ -193,3 +193,7 @@ ros2 launch ntrip ntrip_launch.py
   sudo apt install cutecom
   cutecom
   ```
+
+## 许可证 (License)
+
+本项目采用 Movella/Xsens 许可证（BSD-3-Clause 风格，附带额外条款），完整内容详见 [LICENSE](LICENSE) 文件。
