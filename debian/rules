@@ -1,55 +1,48 @@
 #!/usr/bin/make -f
+# -*- makefile -*-
+# ROS 2 (bloom-style) Debian packaging for xsens_mti_ros2_driver.
 
-# Debian packaging for the xsens_mti_ros2_driver ROS 2 package only.
-# The NTRIP client (src/ntrip) is intentionally not built or installed.
+export DH_VERBOSE=1
+export LDFLAGS=
+export PKG_CONFIG_PATH=/opt/ros/jazzy/lib/pkgconfig
+export DEB_CXXFLAGS_MAINT_APPEND=-DNDEBUG
 
-export DH_VERBOSE = 1
+ifneq ($(filter nocheck,$(DEB_BUILD_OPTIONS)),)
+	BUILD_TESTING_ARG=-DBUILD_TESTING=OFF
+endif
 
-# ROS 2 distribution this package targets.
-ROS_DISTRO ?= jazzy
-ROS_SETUP  := /opt/ros/$(ROS_DISTRO)/setup.sh
+DEB_HOST_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 
-# Where colcon builds and where the package is finally installed.
-PKG       := xsens_mti_ros2_driver
-SRC_DIR   := $(CURDIR)/src/$(PKG)
-COLCON_WS := $(CURDIR)/obj-colcon
-INSTALL_PREFIX := /opt/ros/$(ROS_DISTRO)
-DESTDIR   := $(CURDIR)/debian/ros-jazzy-xsens-mti-ros2-driver
-
-# Run a command with the ROS 2 environment sourced.
-ros_run = . $(ROS_SETUP) && $(1)
+# The driver's CMake project lives here in this repository layout.
+SRC_DIR := src/xsens_mti_ros2_driver
 
 %:
-	dh $@
+	dh $@ -v --buildsystem=cmake \
+		--sourcedirectory=$(SRC_DIR) \
+		--builddirectory=.obj-$(DEB_HOST_GNU_TYPE)
 
 override_dh_auto_configure:
+	# Source the ROS setup so CMAKE_PREFIX_PATH/AMENT_PREFIX_PATH are set.
+	if [ -f "/opt/ros/jazzy/setup.sh" ]; then . "/opt/ros/jazzy/setup.sh"; fi && \
+	dh_auto_configure -- \
+		-DCMAKE_INSTALL_PREFIX="/opt/ros/jazzy" \
+		-DAMENT_PREFIX_PATH="/opt/ros/jazzy" \
+		-DCMAKE_PREFIX_PATH="/opt/ros/jazzy" \
+		$(BUILD_TESTING_ARG)
 
-# Build only the driver package with colcon/ament, installing under the
-# isolated colcon workspace so we control what lands in the .deb.
 override_dh_auto_build:
-	$(call ros_run, \
-		colcon build \
-			--base-paths $(CURDIR)/src \
-			--packages-select $(PKG) \
-			--build-base $(COLCON_WS)/build \
-			--install-base $(COLCON_WS)/install \
-			--merge-install \
-			--cmake-args \
-				-DCMAKE_BUILD_TYPE=Release \
-				-DCMAKE_INSTALL_PREFIX=$(INSTALL_PREFIX))
-
-# Stage the colcon install tree into the package destdir under /opt/ros.
-override_dh_auto_install:
-	mkdir -p $(DESTDIR)$(INSTALL_PREFIX)
-	cp -a $(COLCON_WS)/install/. $(DESTDIR)$(INSTALL_PREFIX)/
-	# colcon's merge-install drops a workspace-local setup; not wanted in a
-	# system package that overlays the existing /opt/ros/$(ROS_DISTRO).
-	rm -f $(DESTDIR)$(INSTALL_PREFIX)/setup.* \
-	      $(DESTDIR)$(INSTALL_PREFIX)/local_setup.* \
-	      $(DESTDIR)$(INSTALL_PREFIX)/_local_setup_util*.py \
-	      $(DESTDIR)$(INSTALL_PREFIX)/COLCON_IGNORE
+	if [ -f "/opt/ros/jazzy/setup.sh" ]; then . "/opt/ros/jazzy/setup.sh"; fi && \
+	dh_auto_build
 
 override_dh_auto_test:
+	echo -- Running tests. Even if one of them fails the build is not canceled.
+	if [ -f "/opt/ros/jazzy/setup.sh" ]; then . "/opt/ros/jazzy/setup.sh"; fi && \
+	dh_auto_test || true
 
-override_dh_auto_clean:
-	rm -rf $(COLCON_WS) $(CURDIR)/log
+override_dh_shlibdeps:
+	if [ -f "/opt/ros/jazzy/setup.sh" ]; then . "/opt/ros/jazzy/setup.sh"; fi && \
+	dh_shlibdeps -l$(CURDIR)/debian/ros-jazzy-xsens-mti-ros2-driver/opt/ros/jazzy/lib/
+
+override_dh_auto_install:
+	if [ -f "/opt/ros/jazzy/setup.sh" ]; then . "/opt/ros/jazzy/setup.sh"; fi && \
+	dh_auto_install
