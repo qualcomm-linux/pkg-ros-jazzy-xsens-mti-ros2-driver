@@ -1,1 +1,6 @@
-extend-diff-ignore = (^\.github|^obj-colcon|^log)
+# Native 3.0 source package: keep build artifacts and CI config out of the
+# generated source tarball.
+tar-ignore = .git
+tar-ignore = .github
+tar-ignore = obj-colcon
+tar-ignore = log

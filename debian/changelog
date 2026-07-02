@@ -1,4 +1,4 @@
-ros-jazzy-xsens-mti-ros2-driver (1.0.2-1) UNRELEASED; urgency=medium
+ros-jazzy-xsens-mti-ros2-driver (1.0.2) UNRELEASED; urgency=medium
 
   * Initial Debian packaging of the xsens_mti_ros2_driver ROS 2 package
     for ROS 2 Jazzy. Builds only the driver; the NTRIP client is excluded.
