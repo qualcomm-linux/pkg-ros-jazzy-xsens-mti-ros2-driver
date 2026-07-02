@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Weijie Shen <weijshen@qti.qualcomm.com>
 Build-Depends: debhelper-compat (= 13), libeigen3-dev, ros-jazzy-ament-cmake, ros-jazzy-ament-lint-auto <!nocheck>, ros-jazzy-ament-lint-common <!nocheck>, ros-jazzy-geometry-msgs, ros-jazzy-mavros-msgs, ros-jazzy-nav-msgs, ros-jazzy-nmea-msgs, ros-jazzy-rclcpp, ros-jazzy-rosidl-default-generators, ros-jazzy-sensor-msgs, ros-jazzy-std-msgs, ros-jazzy-tf2, ros-jazzy-tf2-ros
 Homepage: https://github.com/xsenssupport/Xsens_MTi_ROS_Driver_and_Ntrip_Client
-Standards-Version: 3.9.2
+Standards-Version: 4.6.2
 
 Package: ros-jazzy-xsens-mti-ros2-driver
 Architecture: any
